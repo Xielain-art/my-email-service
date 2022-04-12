@@ -1,13 +1,22 @@
 import React from 'react'
-import {Container} from "react-bootstrap";
 import {Outlet} from 'react-router-dom'
-const Layout = () => {
+import NavBar from "./NavBar";
+import {Container} from "react-bootstrap";
+import {ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import {observer} from "mobx-react-lite";
+
+const Layout = observer(() => {
     return (
-        <Container>
-            123
-            <Outlet/>
-        </Container>
+
+        <>
+            <NavBar/>
+            <ToastContainer/>
+            <Container>
+                <Outlet/>
+            </Container>
+        </>
     )
-}
+})
 
 export default Layout

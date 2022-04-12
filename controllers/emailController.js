@@ -3,6 +3,7 @@ const {Email} = require('../models/models')
 class EmailController {
     async sendEmail(req, res) {
         const senderId = req.user.id
+        const senderEmail = req.user.email
         let {title, body, forIds} = req.body
         if (!forIds) {
             forIds = [senderId]
@@ -10,7 +11,13 @@ class EmailController {
         try {
             let emails = []
             for (const id of forIds) {
-                const email = await Email.create({title, body, sender_id: senderId, userId: id})
+                const email = await Email.create({
+                    title,
+                    body,
+                    sender_id: senderId,
+                    userId: id,
+                    sender_email: senderEmail
+                })
                 emails.push(email)
             }
             return res.json({emails})

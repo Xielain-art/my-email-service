@@ -5,11 +5,11 @@ const userController = require('../controllers/userController')
 const emailController = require('../controllers/emailController')
 const authHandler = require('../middleware/authMiddleware')
 
-router.post('/register', body('email').isEmail(),
-    body('password').isLength({min: 5}),
+router.post('/register', body('email').isEmail().withMessage('Please enter a valid email'),
+    body('password').isLength({min: 5}).withMessage('The minimum password length is 5 characters'),
     userController.register)
-router.post('/login', body('email').isEmail(),
-    body('password').isLength({min: 5}), userController.login)
+router.post('/login', body('email').isEmail().withMessage('Please enter a valid email'),
+    body('password').isLength({min: 5}).withMessage('The minimum password length is 5 characters'), userController.login)
 router.get('/isAuth', authHandler, userController.isAuth)
 
 router.post('/sendEmail', authHandler, emailController.sendEmail)

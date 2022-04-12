@@ -11,7 +11,8 @@ const Email = sequelize.define('email', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     title: {type: DataTypes.STRING},
     body: {type: DataTypes.STRING},
-    sender_id: {type: DataTypes.INTEGER}
+    sender_id: {type: DataTypes.INTEGER},
+    sender_email: {type: DataTypes.STRING},
 })
 User.hasMany(Email)
 Email.belongsTo(User)
