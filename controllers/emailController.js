@@ -10,7 +10,7 @@ class EmailController {
         }
         try {
             let emails = []
-            for (const id of forIds) {
+            forIds.forEach(async (id) => {
                 const email = await Email.create({
                     title,
                     body,
@@ -19,7 +19,7 @@ class EmailController {
                     sender_email: senderEmail
                 })
                 emails.push(email)
-            }
+            })
             return res.json({emails})
         } catch (e) {
             return res.status(400).json({message: 'Error'})

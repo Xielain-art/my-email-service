@@ -4,40 +4,46 @@ import {Context} from "../index";
 import {userApi} from "../http/userApi";
 import {useMessage} from "../hooks/message.hook";
 import {observer} from "mobx-react-lite";
+import ReactQuill from 'react-quill'
+import socketIOClient from "socket.io-client";
 
 
 const SendEmailsPage = observer(() => {
+
+
     const {user} = useContext(Context)
     const [emailTitle, setEmailTitle] = useState('')
     const [emailBody, setEmailBody] = useState('')
     const [sending, setSending] = useState(false)
-    const [editor] = useState(() => withReact(createEditor()))
     const message = useMessage()
     useEffect(() => {
         const getUsers = async () => {
+
             const data = await userApi.getUsers()
             user.setUsers(data)
         }
         getUsers()
-    }, [])
-    const initialValue = [
-        {
-            type: 'paragraph',
-            children: [{text: 'A line of text in a paragraph.'}],
-        },
-    ]
+    }, [user.isAuth])
 
 
     const sendEmail = async (e) => {
         e.preventDefault()
         if (emailTitle !== '' && emailBody !== '') {
-            setSending(true)
-            await userApi.sendEmail(emailTitle, emailBody, user.selectedUsers)
-            message('Success!', 'success')
-            setEmailTitle('')
-            setEmailBody('')
-            user.clearSelectedUsers()
-            setSending(false)
+            try {
+                let socket = socketIOClient()
+                setSending(true)
+                await userApi.sendEmail(emailTitle, emailBody, user.selectedUsers)
+                socket.emit('email', {ids: user.selectedUsers, email: user.user.email})
+                message('Success!', 'success')
+                setEmailTitle('')
+                setEmailBody('')
+                user.clearSelectedUsers()
+                setSending(false)
+
+            } finally {
+                setSending(false)
+            }
+
         } else {
             message('Enter correct values!', 'error')
         }
@@ -85,19 +91,18 @@ const SendEmailsPage = observer(() => {
                         <Form.Control placeholder='Email title'
                                       value={emailTitle}
                                       onChange={e => setEmailTitle(e.target.value)}/>
-                        {/*<Form.Control placeholder='Email body'*/}
-                        {/*              value={emailBody}*/}
-                        {/*              as={'textarea'}*/}
-                        {/*              onChange={e => setEmailBody(e.target.value)}*/}
-                        {/*/>*/}
-
+                        <ReactQuill
+                            value={emailBody}
+                            onChange={(value) => {
+                                setEmailBody(value)
+                                console.log(value)
+                            }}
+                        />
                         <Button disabled={sending}
                                 onClick={sendEmail}>Send Email</Button>
                     </Form>
-
                 </Card.Body>
             </Card>
-
 
         </Container>
     )

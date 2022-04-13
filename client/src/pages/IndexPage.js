@@ -5,6 +5,7 @@ import Email from "../components/Email";
 import {userApi} from "../http/userApi";
 import {observer} from "mobx-react-lite";
 
+
 const IndexPage = observer(() => {
     const {user} = useContext(Context)
     let [loading, setLoading] = useState(false)
@@ -16,7 +17,7 @@ const IndexPage = observer(() => {
             setLoading(false)
         }
         getEmails()
-    }, [])
+    }, [user.isAuth])
     let emails = user.emails
     let content = emails.map((email) => {
         return <Email title={email.title}
@@ -24,7 +25,8 @@ const IndexPage = observer(() => {
                       sender_email={email.sender_email}
                       created_at={email.createdAt}
                       key={email.id}
-                      email_id={email.id}/>
+                      email_id={email.id}
+                     />
     })
     return (
 

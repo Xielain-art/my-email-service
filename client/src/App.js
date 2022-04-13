@@ -10,15 +10,29 @@ import {Context} from "./index";
 import {useHttp} from "./hooks/htt.hook";
 import {userApi} from "./http/userApi";
 import jwtDecode from "jwt-decode";
+import socketIOClient from "socket.io-client";
+import {useMessage} from "./hooks/message.hook";
 
+const ENDPOINT = "/"
 const App = observer(function App() {
+        const message = useMessage()
         const {user} = useContext(Context)
+        const navigate = useNavigate()
+
         useEffect(() => {
             if (localStorage.getItem('token')) {
                 user.setIsAuth(true)
                 user.setUser(jwtDecode(localStorage.getItem('token')))
+                let socket = socketIOClient(ENDPOINT)
+                socket.on(user.user.id, data => {
+                    message(`You received an email from a user ${data}`, 'info')
+                })
+            } else {
+                navigate(LOGIN_PAGE)
             }
-        }, [user.isAuth])
+
+
+        }, [])
 
         return (
             <Routes>
@@ -29,6 +43,7 @@ const App = observer(function App() {
                     <Route path={REGISTER_PAGE}
                            element={<AuthPage/>}/>
                     <Route path={SEND_EMAILS}
+
                            element={<SendEmailsPage/>}/>
                     {user.isAuth && <Route index
                                            path={INDEX_PAGE}
