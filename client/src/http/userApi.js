@@ -17,8 +17,16 @@ const userApi = {
         localStorage.setItem('token', data.token)
         return jwtDecode(data.token)
     },
-    async getEmails(){
+    async getEmails() {
         const {data} = await authInstance.get('user/getEmails')
+        return data
+    },
+    async getUsers() {
+        const {data} = await authInstance.get('user/getUsers')
+        return data
+    },
+    async sendEmail(title, body, forIds) {
+        const {data} = await authInstance.post('user/sendEmail', {title, body, forIds})
         return data
     }
 }

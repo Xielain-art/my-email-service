@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react'
 import {Context} from "../index";
-import {Row, Spinner} from "react-bootstrap";
+import {Accordion, Row, Spinner} from "react-bootstrap";
 import Email from "../components/Email";
 import {userApi} from "../http/userApi";
 import {observer} from "mobx-react-lite";
@@ -23,12 +23,17 @@ const IndexPage = observer(() => {
                       body={email.body}
                       sender_email={email.sender_email}
                       created_at={email.createdAt}
-                      key={email.id}/>
+                      key={email.id}
+                      email_id={email.id}/>
     })
     return (
-        <Row className='d-flex flex-column gap-4'>
-            {loading ? <Spinner animation={"grow"}/> : content}
-        </Row>
+
+        <>
+            <Accordion className='mt-3'>
+                {loading ? <Spinner animation={"grow"}/> : content}
+            </Accordion>
+        </>
+
     )
 })
 

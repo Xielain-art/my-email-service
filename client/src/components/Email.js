@@ -1,18 +1,17 @@
 import React from 'react'
-import {Card} from "react-bootstrap";
+import {Accordion, Card, Row} from "react-bootstrap";
 
-const Email = ({title, body, sender_email, created_at}) => {
+const Email = ({title, body, sender_email, created_at, email_id}) => {
     return (
-        <Card className="text-center">
-            <Card.Header>From {sender_email}</Card.Header>
-            <Card.Body>
-                <Card.Title>{title}</Card.Title>
-                <Card.Text>
-                    {body}
-                </Card.Text>
-            </Card.Body>
-            <Card.Footer className="text-muted">{created_at}</Card.Footer>
-        </Card>
+        <Accordion.Item eventKey={email_id}>
+            <Accordion.Header>{title}</Accordion.Header>
+            <Accordion.Body>
+                {body} <br/>
+                From: {sender_email} <br/>
+                Date: {created_at}
+            </Accordion.Body>
+        </Accordion.Item>
+
     )
 }
 

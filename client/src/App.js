@@ -9,10 +9,17 @@ import {useContext, useEffect} from "react";
 import {Context} from "./index";
 import {useHttp} from "./hooks/htt.hook";
 import {userApi} from "./http/userApi";
+import jwtDecode from "jwt-decode";
 
 const App = observer(function App() {
         const {user} = useContext(Context)
-        const navigate = useNavigate()
+        useEffect(() => {
+            if (localStorage.getItem('token')) {
+                user.setIsAuth(true)
+                user.setUser(jwtDecode(localStorage.getItem('token')))
+            }
+        }, [user.isAuth])
+
         return (
             <Routes>
                 <Route path={'/'}
