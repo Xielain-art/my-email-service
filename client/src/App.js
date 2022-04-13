@@ -7,8 +7,6 @@ import {observer} from "mobx-react-lite";
 import SendEmailsPage from "./pages/SendEmailsPage";
 import {useContext, useEffect} from "react";
 import {Context} from "./index";
-import {useHttp} from "./hooks/htt.hook";
-import {userApi} from "./http/userApi";
 import jwtDecode from "jwt-decode";
 import socketIOClient from "socket.io-client";
 import {useMessage} from "./hooks/message.hook";
@@ -18,7 +16,6 @@ const App = observer(function App() {
         const message = useMessage()
         const {user} = useContext(Context)
         const navigate = useNavigate()
-
         useEffect(() => {
             if (localStorage.getItem('token')) {
                 user.setIsAuth(true)
@@ -30,10 +27,7 @@ const App = observer(function App() {
             } else {
                 navigate(LOGIN_PAGE)
             }
-
-
         }, [])
-
         return (
             <Routes>
                 <Route path={'/'}
